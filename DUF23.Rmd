@@ -20,14 +20,16 @@ library(ggplot2)
 #CoMPP
 ```{r}
 compp <- read.csv("Nb13373_CoMPP.csv", stringsAsFactors = F)
-colnames(compp) <- c("mAb", "Control.1", "Control.2", "Nb13373.1", "Nb13373.2", "Control.1", "Control.2", "Nb13373.1", "Nb13373.2")
 compp.m <- melt(compp)
 colnames(compp.m) <- c("mAb", "sample", "value")
 compp.m$treatment <- c(rep("CDTA", 88),rep("NaOH", 88))
+compp.m$mAb <- factor(compp.m$mAb, levels=unique(compp.m$mAb))
+compp.m$treatment <- factor(compp.m$treatment, levels=unique(compp.m$treatment))
+compp.m$sample <- rep(c(rep("Control.1", 22), rep("Control.2", 22), rep("Nb13373.1",22), rep("Nb13373.2",22)),2)
 ```
 
 ```{r}
-compp.m.heatmap <- ggplot(data = compp.m, aes(x=mAb, y=sample, fill=value)) +
+ggplot(data = compp.m, aes(x=mAb, y=sample, fill=value)) +
   geom_tile(color="white") + 
   scale_fill_gradient(low = "white", high = "red") + 
   geom_text(aes(label = value), size=3)+
@@ -47,14 +49,17 @@ ggsave("Fig_Nb13373_CoMPP.tiff", dpi = 300)
 elisa <- read.csv("ELISA_gsrOE.csv",stringsAsFactors = F)
 elisa$mAb <- paste(elisa$mAb, ": ", elisa$epitope)
 elisa <- elisa[,-2]
-colnames(elisa) <- c("mAb", rep(c("Col-0", "35Spro:GSR-YFP"), 4))
 elisa.m <- melt(elisa)
 colnames(elisa.m) <- c("mAb", "sample", "value") 
 elisa.m$treatment <- c(rep("ammonium oxalate", 46), rep("sodium carbonate", 46), rep("1M KOH", 46), rep("4M KOH", 46))
+elisa.m$mAb <- factor(elisa.m$mAb, levels=unique(elisa.m$mAb))
+elisa.m$treatment <- factor(elisa.m$treatment, levels=unique(elisa.m$treatment))
+elisa.m$sample <- rep(c(rep("Col-0", 23), rep("35S:GSR-YFP", 23)), 4)
 ```
 
+
 ```{r}
-elisa.m.heatmap <- ggplot(data = elisa.m, aes(x=mAb, y=sample, fill=value)) +
+ggplot(data = elisa.m, aes(x=mAb, y=sample, fill=value)) +
   geom_tile(color="white") + 
   scale_fill_gradient(low = "white", high = "red") + 
   geom_text(aes(label = value), size=2)+
@@ -67,5 +72,6 @@ elisa.m.heatmap <- ggplot(data = elisa.m, aes(x=mAb, y=sample, fill=value)) +
         axis.title = element_blank(),
         aspect.ratio = 4,
         legend.position = "none")
+
 ggsave("Fig_DUF23OE_ELISA.tiff", dpi = 300)
 ```

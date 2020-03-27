@@ -1,23 +1,23 @@
 ﻿mAb,Control.1,Control.2,Nb13373.1,Nb13373.2,Control.1,Control.2,Nb13373.1,Nb13373.2
-HG with a low DE (mAb JIM5),35,40,47,41,0,0,0,0
-HG with a high DE (mAb JIM7),66,70,89,81,0,0,0,0
-HG Partially methylesterified (mAb LM18),28,29,41,36,15,16,14,18
-HG Partially methylesterified (mAb LM19),33,34,54,46,43,46,36,40
-HG Partially methylesterified (mAb LM20),33,41,56,41,0,0,0,0
-Backbone of rhamnogalacturonan I (mAb INRA-RU1),46,51,60,56,58,58,47,51
-Backbone of rhamnogalacturonan I (mAb INRA-RU2),47,52,68,63,72,73,68,73
-(1→4)-β-D-galactan (mAb LM5),68,72,50,52,89,94,61,64
-(1→5)-α-L-arabinan (mAb LM6),57,58,57,57,75,76,58,62
-(1→4)-β-D-(galacto)(gluco)mannan (mAb LM21),0,0,0,0,29,31,30,29
-(1→3)(1→4)-β-D-glucan (mAb BS-400-3),0,0,0,0,0,0,5,10
-Xyloglucan (XXXG motif) (mAb LM15),0,0,0,9,28,34,36,31
-(1→4)-β-D-xylan (mAb LM10),0,0,0,0,0,31,32,17
-(1→4)-β-D-xylan/arabinoxylan (mAb LM11),0,0,0,0,9,25,28,21
-Extensin (mAb LM1),10,6,21,14,0,0,0,0
-Extensin (mAb JIM11),8,6,21,14,6,6,10,9
-Extensin (mAb JIM12),6,0,12,8,0,0,0,0
-Extensin (mAb JIM20),20,14,38,28,9,8,16,12
-AGP (mAb JIM8),35,33,35,30,28,24,12,12
-AGP (mAb JIM13),47,49,41,37,52,51,35,35
-AGP (mAb JIM16),8,9,11,9,0,0,0,0
-"AGP, β-linked GlcA (mAb LM2)",17,13,15,12,6,6,6,6
+JIM5 : HG with a low DE,35,40,47,41,0,0,0,0
+JIM7 : HG with a high DE,66,70,89,81,0,0,0,0
+LM18 : HG Partially methylesterified,28,29,41,36,15,16,14,18
+LM19 : HG Partially methylesterified ,33,34,54,46,43,46,36,40
+LM20 : HG Partially methylesterified,33,41,56,41,0,0,0,0
+INRA-RU1 : Backbone of rhamnogalacturonan I,46,51,60,56,58,58,47,51
+INRA-RU2 : Backbone of rhamnogalacturonan I,47,52,68,63,72,73,68,73
+LM5 : (1→4)-β-D-galactan ,68,72,50,52,89,94,61,64
+LM6 : (1→5)-α-L-arabinan,57,58,57,57,75,76,58,62
+LM21 : (1→4)-β-D-(galacto)(gluco)mannan,0,0,0,0,29,31,30,29
+BS-400-3 : (1→3)(1→4)-β-D-glucan,0,0,0,0,0,0,5,10
+LM15 : Xyloglucan (XXXG motif),0,0,0,9,28,34,36,31
+LM10 : (1→4)-β-D-xylan,0,0,0,0,0,31,32,17
+LM11 : (1→4)-β-D-xylan/arabinoxylan,0,0,0,0,9,25,28,21
+LM1 : Extensin,10,6,21,14,0,0,0,0
+JIM11 : Extensin,8,6,21,14,6,6,10,9
+JIM12 : Extensin,6,0,12,8,0,0,0,0
+JIM20 : Extensin,20,14,38,28,9,8,16,12
+JIM8 : AGP,35,33,35,30,28,24,12,12
+JIM13 : AGP,47,49,41,37,52,51,35,35
+JIM16 : AGP,8,9,11,9,0,0,0,0
+"LM2 : AGP, β-linked GlcA",17,13,15,12,6,6,6,6
