@@ -1,8 +1,71 @@
 ---
 title: "DUF23"
 output: github_document
+author: "Devon Birdseye"
+date: "03/27/20"
 ---
-
+#Setup
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+set.seed(586)
+```
+```{r}
+library(reshape2)
+library(tidyverse)
+library(ggplot2)
+```
+
+#CoMPP
+```{r}
+compp <- read.csv("Nb13373_CoMPP.csv", stringsAsFactors = F)
+colnames(compp) <- c("mAb", "Control.1", "Control.2", "Nb13373.1", "Nb13373.2", "Control.1", "Control.2", "Nb13373.1", "Nb13373.2")
+compp.m <- melt(compp)
+colnames(compp.m) <- c("mAb", "sample", "value")
+compp.m$treatment <- c(rep("CDTA", 88),rep("NaOH", 88))
+```
+
+```{r}
+compp.m.heatmap <- ggplot(data = compp.m, aes(x=mAb, y=sample, fill=value)) +
+  geom_tile(color="white") + 
+  scale_fill_gradient(low = "white", high = "red") + 
+  geom_text(aes(label = value), size=3)+
+  coord_flip()+
+  theme_minimal()+
+  facet_wrap(~treatment)+
+  theme(axis.text.y = element_text(size=9, color = "black"),
+        axis.text.x = element_text(size=9, angle = 35, hjust = .9, color = "black"),
+        axis.title.y = element_blank(),
+        aspect.ratio = 3,
+        legend.position = "none")
+ggsave("Fig_Nb13373_CoMPP.tiff", dpi = 300)
+```
+
+#ELISA
+```{r}
+elisa <- read.csv("ELISA_gsrOE.csv",stringsAsFactors = F)
+elisa$mAb <- paste(elisa$mAb, ": ", elisa$epitope)
+elisa <- elisa[,-2]
+colnames(elisa) <- c("mAb", rep(c("Col-0", "35Spro:GSR-YFP"), 4))
+elisa.m <- melt(elisa)
+colnames(elisa.m) <- c("mAb", "sample", "value") 
+elisa.m$treatment <- c(rep("ammonium oxalate", 46), rep("sodium carbonate", 46), rep("1M KOH", 46), rep("4M KOH", 46))
+```
+
+```{r}
+elisa.m.heatmap <- ggplot(data = elisa.m, aes(x=mAb, y=sample, fill=value)) +
+  geom_tile(color="white") + 
+  scale_fill_gradient(low = "white", high = "red") + 
+  geom_text(aes(label = value), size=2)+
+  coord_flip()+
+  theme_minimal()+
+  facet_wrap(~treatment, nrow = 1)+
+  theme(text = element_text(size=8),
+        axis.text.y = element_text(color = "black"),
+        axis.text.x = element_text(angle = 35, hjust = .9, color = "black"),
+        axis.title = element_blank(),
+        aspect.ratio = 4,
+        legend.position = "none")
+ggsave("Fig_DUF23OE_ELISA.tiff", dpi = 300)
 ```
