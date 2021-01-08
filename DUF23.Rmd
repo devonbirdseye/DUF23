@@ -41,7 +41,7 @@ ggplot(data = compp.m, aes(x=mAb, y=sample, fill=value)) +
         axis.title.y = element_blank(),
         aspect.ratio = 3,
         legend.position = "none")
-ggsave("Fig_Nb13373_CoMPP.tiff", dpi = 300)
+ggsave("Fig_Nb13373_CoMPP.png", dpi = 300)
 ```
 
 #ELISA
@@ -73,5 +73,82 @@ ggplot(data = elisa.m, aes(x=mAb, y=sample, fill=value)) +
         aspect.ratio = 4,
         legend.position = "none")
 
-ggsave("Fig_DUF23OE_ELISA.tiff", dpi = 300)
+ggsave("Fig_DUF23OE_ELISA.png", dpi = 300)
 ```
+
+#HPAEC
+```{r read in hpaec data}
+hpaec <- read.csv("180424_DUF23_HPAEC.csv", stringsAsFactors = F)
+```
+```{r calculate mol ratios}
+hpaec$sum <- rowSums(hpaec[,3:12])
+hpaec$Fucose.sum <- hpaec$Fucose/hpaec$sum
+hpaec$Rhamnose.sum <- hpaec$Rhamnose/hpaec$sum
+hpaec$Arabinose.sum <- hpaec$Arabinose/hpaec$sum
+hpaec$Glucosamine.sum <- hpaec$Glucosamine/hpaec$sum
+hpaec$Galactose.sum <- hpaec$Galactose/hpaec$sum
+hpaec$Glucose.sum <- hpaec$Glucose/hpaec$sum
+hpaec$Xylose.sum <- hpaec$Xylose/hpaec$sum
+hpaec$Mannose.sum <- hpaec$Mannose/hpaec$sum
+hpaec$GalA.sum <- hpaec$GalA/hpaec$sum
+hpaec$GlcA.sum <- hpaec$GlcA/hpaec$sum
+```
+```{r split into dfs by genotype}
+hpaec.split <- split.data.frame(hpaec, f = hpaec$genotype)
+```
+```{r calculate averages}
+#define new (empty) dataframe
+hpaec.avg <- data.frame(matrix(NA, nrow = 9, ncol = 10))
+colnames(hpaec.avg) <- as.character(colnames(hpaec)[3:12])
+rownames(hpaec.avg) <- unique(hpaec$genotype)
+#populate dataframe with averages
+for(i in 1:length(hpaec.split)){
+hpaec.avg[i,] <- colSums(hpaec.split[[i]][,14:23])
+}
+```
+```{r calculate standard deviation}
+#define new (empty) dataframe
+hpaec.sd <- data.frame(matrix(NA, nrow = 9, ncol = 10))
+colnames(hpaec.sd) <- as.character(colnames(hpaec)[3:12])
+rownames(hpaec.sd) <- unique(hpaec$genotype)
+#populate dataframe with averages
+for(i in 1:length(hpaec.split)){
+hpaec.sd[i,] <- apply(hpaec.split[[i]][,14:23], 2, sd)
+}
+```
+
+```{r combine avg and sd into single dataframe}
+hpaec.avg$genotype <- rownames(hpaec.avg)
+hpaec.sd$genotype <- rownames(hpaec.sd)
+
+hpaec.avg <- melt(hpaec.avg)
+hpaec.sd <- melt(hpaec.sd)
+
+colnames(hpaec.avg) <- c("genotype", "sugar", "avg")
+colnames(hpaec.sd) <- c("genotype", "sugar", "sd")
+
+hpaec.avg$id <- 1:nrow(hpaec.avg)
+hpaec.sd$id <- 1:nrow(hpaec.sd)
+```
+```{r}
+hpaec.avg.sd <- merge.data.frame(hpaec.avg, hpaec.sd[,c("id", "sd")], by.x = "id", by.y = "id")
+hpaec.avg.sd
+```
+
+
+```{r plot hpaec data}
+ggplot(hpaec.avg.sd, mapping = aes(x=sugar, y=avg, fill=genotype))+
+  geom_col(position = "dodge")+
+  scale_fill_manual(values=c("#000000","#009292","#ff6db6","#24ff24",
+ "#490092","#db6d00","#b66dff","#920000","#b6dbff"))+
+  geom_errorbar(aes(ymin=avg-sd, ymax=avg+sd), width=.2,
+                 position=position_dodge(.9))+
+  theme_bw()+
+  ylab("mol%")+
+  theme(axis.text.x = element_text(angle=45, hjust = 1.1))
+ggsave("180424_DUF23_HPAEC.png", width = 7, height = 6)
+```
+
+
+
+
