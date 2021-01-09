@@ -98,31 +98,28 @@ hpaec.split <- split.data.frame(hpaec, f = hpaec$genotype)
 ```
 ```{r calculate averages}
 #define new (empty) dataframe
-hpaec.avg <- data.frame(matrix(NA, nrow = 9, ncol = 10))
-colnames(hpaec.avg) <- as.character(colnames(hpaec)[3:12])
-rownames(hpaec.avg) <- unique(hpaec$genotype)
+hpaec.avg <- data.frame(matrix(NA, nrow = 9, ncol = 11))
+colnames(hpaec.avg) <- c("genotype", as.character(colnames(hpaec)[3:12]))
 #populate dataframe with averages
 for(i in 1:length(hpaec.split)){
-hpaec.avg[i,] <- colSums(hpaec.split[[i]][,14:23])
+hpaec.avg[i,] <- c(hpaec.split[[i]][1,1], colMeans(hpaec.split[[i]][,14:23]))
 }
 ```
+
+
 ```{r calculate standard deviation}
 #define new (empty) dataframe
-hpaec.sd <- data.frame(matrix(NA, nrow = 9, ncol = 10))
-colnames(hpaec.sd) <- as.character(colnames(hpaec)[3:12])
-rownames(hpaec.sd) <- unique(hpaec$genotype)
+hpaec.sd <- data.frame(matrix(NA, nrow = 9, ncol = 11))
+colnames(hpaec.sd) <- c("genotype", as.character(colnames(hpaec)[3:12]))
 #populate dataframe with averages
 for(i in 1:length(hpaec.split)){
-hpaec.sd[i,] <- apply(hpaec.split[[i]][,14:23], 2, sd)
+hpaec.sd[i,] <- c(hpaec.split[[i]][1,1], apply(hpaec.split[[i]][,14:23], 2, sd))
 }
 ```
 
 ```{r combine avg and sd into single dataframe}
-hpaec.avg$genotype <- rownames(hpaec.avg)
-hpaec.sd$genotype <- rownames(hpaec.sd)
-
-hpaec.avg <- melt(hpaec.avg)
-hpaec.sd <- melt(hpaec.sd)
+hpaec.avg <- melt(hpaec.avg, id.vars = "genotype")
+hpaec.sd <- melt(hpaec.sd, id.vars = "genotype")
 
 colnames(hpaec.avg) <- c("genotype", "sugar", "avg")
 colnames(hpaec.sd) <- c("genotype", "sugar", "sd")
@@ -132,22 +129,30 @@ hpaec.sd$id <- 1:nrow(hpaec.sd)
 ```
 ```{r}
 hpaec.avg.sd <- merge.data.frame(hpaec.avg, hpaec.sd[,c("id", "sd")], by.x = "id", by.y = "id")
-hpaec.avg.sd
 ```
 
+```{r}
+hpaec.avg.sd$avg <- as.numeric(hpaec.avg.sd$avg)
+hpaec.avg.sd$sd <- as.numeric(hpaec.avg.sd$sd)
+```
 
 ```{r plot hpaec data}
+pal <- c("#A6CEE3", "#E31A1C", "#1F78B4", "#FF7F00","#B2DF8A","#6A3D9A","#FDBF6F","#33A02C","#FB9A99")
+
 ggplot(hpaec.avg.sd, mapping = aes(x=sugar, y=avg, fill=genotype))+
   geom_col(position = "dodge")+
-  scale_fill_manual(values=c("#000000","#009292","#ff6db6","#24ff24",
- "#490092","#db6d00","#b66dff","#920000","#b6dbff"))+
+  scale_fill_manual(values=pal)+
   geom_errorbar(aes(ymin=avg-sd, ymax=avg+sd), width=.2,
                  position=position_dodge(.9))+
-  theme_bw()+
+  theme_minimal() +
+  theme(panel.grid.minor.x = element_blank(), panel.grid.major.x = element_blank())+
   ylab("mol%")+
-  theme(axis.text.x = element_text(angle=45, hjust = 1.1))
+  theme(axis.text.x = element_text(angle=45, hjust = 1.1))+
+  coord_cartesian(expand = F)
 ggsave("180424_DUF23_HPAEC.png", width = 7, height = 6)
 ```
+
+
 
 
 
